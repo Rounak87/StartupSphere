@@ -23,7 +23,7 @@ export const createUser = async (req, res) => {
     }
 
     try {
-        // Ensure the column names are lowercase: 'email' instead of 'Email'
+       
         const [result] = await pool.query('INSERT INTO users (name ,password, role) VALUES (?, ?, ?)', [name, password, role]);
         res.status(201).json({ message: 'User created', userID: result.insertId });
     } catch (error) {
