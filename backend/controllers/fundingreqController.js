@@ -1,3 +1,4 @@
+import { request } from "express";
 import pool from "../db.js";
 
 export const getfundingreq= async(req, res) => {
@@ -46,3 +47,25 @@ export const givefundingreq= async(req, res) => {
 
 
 }
+
+export const updateFundingStatus= async(req, res) => {
+
+    const {requestid}=req.params;
+    const {status}=req.body;
+
+    try{
+
+        const [rows]=await pool.query('update FundingRequests set status=? where requestID=?',[status,requestid]);
+
+        if(rows.affectedRows===0){
+            return res.status(404).json({error:'Funding request not found'});
+        }
+        res.status(200).json({message:'Funding request updated successfully'});
+    }
+    catch{
+        console.error(err);
+        res.status(500).json({error:'Error at funding requesting'});
+    }
+
+
+} 

@@ -21,8 +21,8 @@ export const createStartups=async (req,res)=>{
     }
     try{
         const [rows]=await pool.query('INSERT INTO startups (FounderId,name,description,industry,fundingStage) VALUES (?,?,?,?,?)',[founderId,name,description,industry,fundingStage]);
-        if (result.insertId) {
-            res.status(201).json({ message: 'Startup created', startupID: result.insertId });
+        if (rows.insertId) {
+            res.status(201).json({ message: 'Startup created', startupID: rows.insertId });
         } else {
             res.status(400).json({ error: 'Failed to create startup' });
         }
@@ -31,5 +31,24 @@ export const createStartups=async (req,res)=>{
         console.error(err);
         res.status(500).json({error:'failed to create startup'});
     }
+}
+
+export const getStartupsByIndustry = async (req, res) => {
+
+    const {industry}=req.query;
+
+    try{
+        const [rows]=await pool.query('SELECT * FROM startups WHERE industry = ?',[industry]);
+        if(rows.length===0){
+            return res.status(404).json({message:'No startups found in this industry'});
+        }
+        res.json(rows);
+    }
+    catch(err){
+        console.error(err);
+        res.status(500).json({error:'failed to fetch startup'});
+    }
+
+
 }
 
