@@ -24,29 +24,31 @@ export const getfundingreq= async(req, res) => {
 
 }
 
-export const givefundingreq= async(req, res) => {
-    const {startupID,investorID,amountoffered}=req.body;
-    if(!startupID || !investorID || !amountoffered){
-        return res.status(400).json({error:'all fields not there'});
+export const givefundingreq = async (req, res) => {
+    const { startupid } = req.params;
+    const { investorID, amountoffered } = req.body;
+    console.log('Received:', { startupid, investorID, amountoffered }); // <-- Add this line
+    if (!startupid || !investorID || !amountoffered) {
+        return res.status(400).json({ error: 'all fields not there' });
     }
-    try{
-
-        const [row]=await pool.query('insert into FundingRequests (startupID,investorID,amountoffered) values (?,?,?)',[startupID,investorID,amountoffered]);
-        if(row.insertId){
+    const sid = parseInt(startupid, 10);
+    const iid = parseInt(investorID, 10);
+    const amt = parseFloat(amountoffered);
+    try {
+        const [row] = await pool.query(
+            'insert into FundingRequests (StartupID, InvestorID, AmountOffered) values (?,?,?)',
+            [sid, iid, amt]
+        );
+        if (row.insertId) {
             res.status(201).json({ message: 'Funding request created', fundingID: row.insertId });
-        }
-        else{
+        } else {
             res.status(400).json({ error: 'Failed while creating funding request' });
         }
-    }
-    catch(err){
+    } catch (err) {
         console.error(err);
-        res.status(500).json({error:'Error at funding requesting'});
+        res.status(500).json({ error: 'Error at funding requesting' });
     }
-
-
-
-}
+};
 
 export const updateFundingStatus= async(req, res) => {
 
@@ -68,4 +70,4 @@ export const updateFundingStatus= async(req, res) => {
     }
 
 
-} 
+}

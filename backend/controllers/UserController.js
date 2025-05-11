@@ -32,4 +32,17 @@ export const createUser = async (req, res) => {
     }
 };
 
+export const getInvestorIdByUserId = async (req, res) => {
+    const { userid } = req.params;
+    try {
+        const [rows] = await pool.query('SELECT InvestorID FROM investors WHERE UserID = ?', [userid]);
+        if (rows.length === 0) {
+            return res.status(404).json({ error: 'Investor not found' });
+        }
+        res.json(rows[0]);
+    } catch (error) {
+        res.status(500).json({ error: 'Could not fetch InvestorID' });
+    }
+};
+
 
