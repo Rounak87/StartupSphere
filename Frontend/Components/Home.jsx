@@ -65,14 +65,22 @@ const Home = ({ user }) => {
             const startup = startups[post.StartupID];
             const author = users[startup?.FounderID];
             return (
-              <div key={post.PostID} className="bg-white shadow-lg flex flex-col justify-between items-center rounded-2xl p-6 border-2 border-[#EE2B69] max-w-xs min-w-[280px]">
-                <h2 className="text-xl font-bold text-[#EE2B69] mb-2">
-                  {startup ? startup.Name : "Loading..."}
-                </h2>
-                <p className="text-sm font-semibold text-gray-700 mb-1">
-                  By: {author ? author.Name : "Loading..."}
+              <div
+                key={post.PostID}
+                className="bg-white shadow-lg flex flex-col justify-between items-center rounded-2xl p-6 border-2 border-[#EE2B69] max-w-xs min-w-[280px] w-[320px] h-[220px] overflow-hidden"
+                style={{ boxSizing: 'border-box' }}
+              >
+                <div className="flex flex-col items-center w-full mb-2">
+                  <h2 className="text-xl font-bold text-[#EE2B69] truncate text-center w-full">
+                    {startup ? startup.Name : "Loading..."}
+                  </h2>
+                  <div className="text-sm font-semibold text-gray-700 mt-1 text-center w-full truncate">
+                    by {author ? author.Name : "Loading..."}
+                  </div>
+                </div>
+                <p className="text-md text-gray-800 mb-2 text-center line-clamp-4 overflow-hidden flex-1 w-full">
+                  {post.Content}
                 </p>
-                <p className="text-md text-gray-800 mb-2">{post.Content}</p>
                 {user?.role === "Investor" && (
                   <button
                     className="bg-[#EE2B69] text-white px-4 py-2 rounded-xl cursor-pointer mt-2 hover:bg-[#d1225b] transition"
